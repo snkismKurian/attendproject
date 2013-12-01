@@ -1,13 +1,21 @@
 h1 【Node.js勉強会】
 h2 メンバ追加
 form(action='/member',method='post')
+	お名前：
 	input(type='text',name='name')
+	メッセージ：
+	input(type='text',name='write')
 	input(type='submit',name='add',value='追加')
 h2 参加者一覧
+h3 
 ul
 	each item in list
 		li=item.name
 		form(action='/member/condition',method='post')
-			input(type='submit',name='attend',value='出席')
 			input(type='submit',name='leave',value='退席')
 			input(type='hidden',name='name',value=item.name)
+		
+hr
+each item in list
+	li=item.write
+hr

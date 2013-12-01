@@ -8,8 +8,8 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
-
 var app = express();
+var MemcachedStore = require('connect-memcached')(express);
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -22,6 +22,12 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.cookieParser(''));
+app.use(express.session( {
+	key: ''
+	,cookie: {}
+	,store: new MemcachedStore()
+}))
 
 // development only
 if ('development' == app.get('env')) {
@@ -30,10 +36,9 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/hogehoge/:id', routes.hogehoge);
-app.get('/member', routes.showMongo);
-app.post('/member', routes.saveMongo);
-app.get('/member/condition', routes.showCondition);
-app.post('/member/condition', routes.saveCondition);
+app.get('/member', routes.show);
+app.post('/member', routes.save);
+app.post('/member/remove', routes.remove);
 app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){

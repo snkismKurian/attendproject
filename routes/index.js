@@ -31,7 +31,7 @@ client.open(function (err, client) {
 });
 
 // show data and form
-exports.showMongo = function(req, res) {
+exports.show = function(req, res) {
 	client.collection('dbtest',
 		function(err, collection) {
 			if (err) {
@@ -43,7 +43,7 @@ exports.showMongo = function(req, res) {
 				}
 				res.render('member', {
 					title: 'Mongo Example',
-					list: results
+					list: results 
 				});
 			});
 		}
@@ -51,14 +51,18 @@ exports.showMongo = function(req, res) {
 };
 
 //save posted data
-exports.saveMongo = function(req, res) {
+exports.save = function(req, res) {
 	var name = req.param('name');
+	var write = req.param('write');
 	client.collection('dbtest',
 		function(err, collection) {
 			if (err) {
 				throw err;
 			}
-			collection.save({name:name}, function(err) {
+			collection.save({
+				name:name
+				,write:write
+			}, function(err) {
 				if (err) {
 					throw err;
 				}
@@ -68,35 +72,15 @@ exports.saveMongo = function(req, res) {
 	);
 };
 
-// 出席・退席ボタン押下時
-exports.showCondition = function(req, res) {
-	client.collection('dbtest',
-		function(err, collection) {
-			if (err) {
-				throw err;
-			}
-			collection.find().toArray(function(err, results) {
-				if (err) {
-					throw err;
-				}
-				res.render('member/condition', {
-					title: 'Mongo Example',
-					list: results
-				});
-			});
-		}
-	);
-};
-
-//save posted data
-exports.saveCondition = function(req, res) {
+//remove posted data
+exports.remove = function(req, res) {
 	var name = req.param('name');
 	client.collection('dbtest',
 		function(err, collection) {
 			if (err) {
 				throw err;
 			}
-			collection.save({name:name}, function(err) {
+			collection.remove({name:name}, function(err) {
 				if (err) {
 					throw err;
 				}
